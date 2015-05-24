@@ -6,9 +6,9 @@ De cara a las elecciones municipales quería mostrar los resultados del recuento
 
 ##Mejoras y evolución
 Se podrían hacer muchas mejoras. Las más importantes:
-*Implantar medidas básicas de seguridad para evitar hackeos del script o manipulaciones en el resultado.
-*Crear panel de configuración y lógica de negocio para el manejo dinámico del número de partidos, número de concejales electos, ...
-*Implantar sistema para diferenciar resultados según mesa o colegio electoral (mis requisitos iniciales eran muy básicos: un colegio electoral con una mesa).
+* Implantar medidas básicas de seguridad para evitar hackeos del script o manipulaciones en el resultado.
+* Crear panel de configuración y lógica de negocio para el manejo dinámico del número de partidos, número de concejales electos, ...
+* Implantar sistema para diferenciar resultados según mesa o colegio electoral (mis requisitos iniciales eran muy básicos: un colegio electoral con una mesa).
 
 
 ##Software de terceros
