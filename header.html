@@ -1,0 +1,170 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Locales 2015 - Arroyomolinos de León</title>
+
+		<script src="jquery-2.1.4.min.js"></script>
+		<script src="Chart.js"></script>
+		<style type="text/css">
+		*{
+			font-family: sans-serif;
+		}
+		.legend{
+			float: left;
+		}
+		.legend ul{
+			list-style: none;
+		}
+		.legend ul li span{
+			width: 15px;
+			height: 15px;
+			display: block;
+			float: left;
+			border-radius: 2px;
+		}
+		@media screen and (min-width: 600px) {
+			.left{
+				float: left;
+				width: 50%;
+			}
+
+			.right{
+				float: right;
+				width: 50%;
+			}
+		}
+		</style>
+	</head>
+	<body>
+	<h1>Resultados Elecciones Municipales en Arroyomolinos de León</h1>
+	<h3>A partir de las 20h del 24 de mayo podrás seguir la evolución de los resultados provisionales en vivo.</h3>
+	<div class="left">
+		<h5>Votos por partidos</h5>
+		<div id="votos-legend" class="legend"></div>
+		<div id="canvas-holder">
+			<canvas id="votos-area" width="200" height="200"/>
+		</div>
+	</div>
+	<div class="right">
+		<h5>Composición ayuntamiento (7 concejales)</h5>
+		<div id="concejales-2011"></div>
+		<div id="concejales-legend" class="legend"></div>
+		<div id="canvas-holder">
+			<canvas id="concejales-area" width="200" height="200"/>
+		</div>
+	</div>
+
+
+	<script>
+		var PSOE = "#FF0000", PSOE_highlight = "#FF5A5E", PP = "#093EA6", PP_highlight = "#2D5DBB", Independientes = "#FDB45C", Independientes_highlight = "#FFC870", IU = "#086E08", IU_highlight = "#60A260";
+
+		var votosData = [
+				{
+					value: 1,
+					color:PSOE,
+					highlight: PSOE_highlight,
+					label: "PSOE"
+				},
+				{
+					value: 1,
+					color: PP,
+					highlight: PP_highlight,
+					label: "PP"
+				},
+				{
+					value: 1,
+					color: Independientes,
+					highlight: Independientes_highlight,
+					label: "Independientes"
+				},
+				{
+					value: 1,
+					color: IU,
+					highlight: IU_highlight,
+					label: "IU"
+				}
+
+			];
+
+			var concejalesData = [
+				{
+					value: 1,
+					color:PSOE,
+					highlight: PSOE_highlight,
+					label: "PSOE"
+				},
+				{
+					value: 1,
+					color: PP,
+					highlight: PP_highlight,
+					label: "PP"
+				},
+				{
+					value: 1,
+					color: Independientes,
+					highlight: Independientes_highlight,
+					label: "Independientes"
+				},
+				{
+					value: 1,
+					color: IU,
+					highlight: IU_highlight,
+					label: "IU"
+				}
+
+			];
+
+			window.onload = function(){
+				var ctx_votos = document.getElementById("votos-area").getContext("2d");
+				window.votosPie = new Chart(ctx_votos).Pie(votosData, {
+					legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++){%><li><span style=\"background-color:<%=segments[i].fillColor%>\"></span><%if(segments[i].label){%><%=segments[i].label%><%}%> <%if(segments[i].value){%> (<%=segments[i].value%>) <%}%></li><%}%></ul>"
+				});
+				document.getElementById('votos-legend').innerHTML = window.votosPie.generateLegend();
+
+				var ctx_concejales = document.getElementById("concejales-area").getContext("2d");
+				window.concejalesPie = new Chart(ctx_concejales).Pie(concejalesData, {
+					legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++){%><li><span style=\"background-color:<%=segments[i].fillColor%>\"></span><%if(segments[i].label){%><%=segments[i].label%><%}%> <%if(segments[i].value){%> (<%=segments[i].value%>) <%}%></li><%}%></ul>"
+				});
+				document.getElementById('concejales-legend').innerHTML = window.concejalesPie.generateLegend();
+
+
+				// get data server
+				setInterval(function(){
+					$.getJSON('get.php', function(data){
+						var votos=[], todoceros=true;
+						$.each( data, function( i, partido ) {
+							todoceros = todoceros && (partido.votos == 0);
+    						window.votosPie.segments[i].value = partido.votos;
+
+    						votos[i] = parseInt(partido.votos);
+    						window.concejalesPie.segments[i].value = 0;
+  						});
+  						if (!todoceros) {
+  							window.votosPie.update();
+							document.getElementById('votos-legend').innerHTML = window.votosPie.generateLegend();
+							var divisor=[1,1,1,1], votositerados=votos.slice(0);
+	  						for (var i = 0; i < 7; i++) {
+	  							var max = Math.max.apply(Math,votositerados);
+	  							var index = $.inArray(max, votositerados);//.indexOf(max);
+
+	    						window.concejalesPie.segments[index].value = window.concejalesPie.segments[index].value + 1;
+	    						divisor[index] = divisor[index] + 1;
+	  							votositerados[index] = votos[index] / divisor[index];
+	  						};
+	  						window.concejalesPie.update();
+							document.getElementById('concejales-legend').innerHTML = window.concejalesPie.generateLegend();
+						};
+					});
+				}, 3000);
+
+
+			};
+
+
+
+
+
+	</script>
+	</body>
+</html>

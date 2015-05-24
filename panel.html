@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Locales 2015 - Arroyomolinos de León</title>
+
+		<script src="jquery-2.1.4.min.js"></script>
+		<style type="text/css">
+		#psoe{
+			background-color: #FF0000;
+		}
+		#pp{
+			background-color: #093EA6;
+		}
+		#independientes{
+			background-color: #FDB45C;
+		}
+		#iu{
+			background-color: #086E08;
+		}
+		button{
+			width: 100%;
+			height: 200px;
+			display: block;
+			margin: 15px 0;
+			border-radius: 3px;
+			font-size: 3em;
+			color: white;
+			font-weight: bold;
+			border: none;
+		}
+		</style>
+	</head>
+	<body>
+		<div>
+			<button id="psoe" onclick="voto(1)">PSOE</button>
+			<button id="pp" onclick="voto(2)">PP</button>
+			<button id="independientes" onclick="voto(3)">Independientes</button>
+			<button id="iu" onclick="voto(4)">IU</button>
+		</div>
+<br/><br/><br/><br/><br/><br/><br/><br/>
+		<a href="reset.php">Resetear a 0</a>
+
+
+	<script>
+		//PSOE = 1, PP = 2, Independientes = 3, IU = 4;
+		function voto (id) {
+			$.post("controller.php", {partido: id});
+		}
+	</script>
+	</body>
+</html>
